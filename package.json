@@ -76,8 +76,7 @@
     "whatwg-url-compat": "^0.6.5",
     "xmlhttprequest": "^1.8.0"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "engines": {
     "npm": ">=3.3.12"
   },

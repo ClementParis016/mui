@@ -43,7 +43,10 @@ function inputFactory(isTextArea) {
     ngModel: '='
   };
 
-  template = '<div class="mui-textfield">';
+  template = '<div class="mui-textfield" ng-class="{'
+    + '\'mui--is-touched\': innerInputCtrl.$touched,'
+    + '\'mui--is-empty\': innerInputCtrl.$isEmpty(innerInputCtrl.$viewValue)'
+    + '}">';
 
   // element-specific
   if (!isTextArea) {
@@ -84,10 +87,13 @@ function inputFactory(isTextArea) {
       link: function(scope, element, attrs, controllers) {
         var inputEl = element.find('input') || element.find('textarea'),
             labelEl = element.find('label'),
+            innerInputCtrl = inputEl.controller('ngModel'),
             ngModelCtrl = controllers[0],
             formCtrl = controllers[1],
             isUndef = angular.isUndefined,
             el = inputEl[0];
+
+        scope.innerInputCtrl = innerInputCtrl;
 
         // disable MUI js
         if (el) el._muiTextfield = true;
@@ -100,17 +106,17 @@ function inputFactory(isTextArea) {
         if (!isTextArea) scope.type = scope.type || 'text';
         else scope.rows = scope.rows || 2;
         
-        // autofocus
-        if (!isUndef(attrs.autofocus)) inputEl[0].focus();
+        // // autofocus
+        // if (!isUndef(attrs.autofocus)) inputEl[0].focus();
 
-        // required
-        if (!isUndef(attrs.required)) inputEl.prop('required', true);
+        // // required
+        // if (!isUndef(attrs.required)) inputEl.prop('required', true);
 
-        // invalid
-        if (!isUndef(attrs.invalid)) inputEl.addClass('mui--is-invalid');
+        // // invalid
+        // if (!isUndef(attrs.invalid)) inputEl.addClass('mui--is-invalid');
 
-        // set is-empty|is-not-empty
-        handleEmptyClasses(inputEl, scope.ngModel);
+        // // set is-empty|is-not-empty
+        // handleEmptyClasses(inputEl, scope.ngModel);
 
         // float-label
         if (!isUndef(scope.floatLabel)) {
@@ -128,33 +134,33 @@ function inputFactory(isTextArea) {
         }
 
         // seed with `untouched`, `pristine` classes
-        inputEl.addClass(untouchedClass + ' ' + pristineClass);
+        // inputEl.addClass(untouchedClass + ' ' + pristineClass);
 
-        // replace `untouched` with `touched` when control loses focus
-        inputEl.on('blur', function blurHandler() {
-          // ignore if event is a window blur
-          if (document.activeElement === inputEl[0]) return;
+        // // replace `untouched` with `touched` when control loses focus
+        // inputEl.on('blur', function blurHandler() {
+        //   // ignore if event is a window blur
+        //   if (document.activeElement === inputEl[0]) return;
 
-          // replace class and remove event handler
-          inputEl.removeClass(untouchedClass).addClass(touchedClass);
-          inputEl.off('blur', blurHandler);
-        });
+        //   // replace class and remove event handler
+        //   inputEl.removeClass(untouchedClass).addClass(touchedClass);
+        //   inputEl.off('blur', blurHandler);
+        // });
 
-        // replace `pristine` with `dirty` when user interacts with control
-        inputEl.one('input change', function() {
-          inputEl.removeClass(pristineClass).addClass(dirtyClass);
-        });
+        // // replace `pristine` with `dirty` when user interacts with control
+        // inputEl.one('input change', function() {
+        //   inputEl.removeClass(pristineClass).addClass(dirtyClass);
+        // });
 
-        // handle is-empty|is-not-empty classes
-        inputEl.on('input change', function(ev) {
-          handleEmptyClasses(inputEl, inputEl.val());
-        });
+        // // handle is-empty|is-not-empty classes
+        // inputEl.on('input change', function(ev) {
+        //   handleEmptyClasses(inputEl, inputEl.val());
+        // });
 
-        // handle changes
-        scope.onChange = function() {
-          // trigger ng-change on parent
-          if (ngModelCtrl) ngModelCtrl.$setViewValue(scope.ngModel);
-        }
+        // // handle changes
+        // scope.onChange = function() {
+        //   // trigger ng-change on parent
+        //   if (ngModelCtrl) ngModelCtrl.$setViewValue(scope.ngModel);
+        // }
       }
     };
   }];
